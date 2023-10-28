@@ -63,9 +63,11 @@ You should use volumes or bind mounts for all following folders:
 * ```/var/lib/rspamd``` - Rspamd static runtime data
 
 # Configuration
-All configuration (except what can be configured by using environment variables) should be put under ```/config``` (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server. You could create multiple such users or you could create multiple users having mailboxes but only one user would retrieve mails and use rules to distribute messages to correct mailboxes. 
+All configuration (except what can be configured by using environment variables) should be put under ```/config``` (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server for the same user. You could create multiple such users or you could create multiple users having mailboxes but only one user (with or without mailbox) would retrieve mails and use rules to distribute messages to correct mailboxes. 
 
 Container will read ```/config``` only on start and set up users, configs etc. so in case you want to modify config, restart the container. If no configuration has been added container will start with Dovecot running, but no mailboxes will be created nor mail will be retrieved.
+
+Additionally it is possible to put files to /config/etc which will be copied over /etc on container start. This would allow customizing config of daemons even further.
 
 ## Users
 Virtual users can be created by creating a folder under ```/config/users``` e.g. ```/config/users/user@example.com```. In order to create mailbox for the user, create a file passwd under user's folder. In order to enable email retrieval for the user create a file fetchmailrc and for fdm create a file fdm.conf. 
@@ -142,6 +144,9 @@ action "user@example.com:Received" pipe "/usr/libexec/dovecot/deliver -d user@ex
 match "^Delivered-To: alias@example.com" in headers action { "alias@example.com" "alias@example.com:Received" }
 match all action { "user@example.com" "user@example.com:Received" }
 ```
+
+# SSL
+By default we use self signed certificate for IMAPS thus your mail client will complain about it. On container re-creation certificates will be regenerated so your mail client will complain even more. You could create your own SSL certificates and place them to /config/etc/ssl/dovecot using names server.key and server.pem.
 
 # Security considerations
 Make sure that container configuration and data cannot be read by outsiders. If you just do ```mkdir container``` and use bind mounts, your container config and data actually could be world readable. In worst case your emails are world readable (on container start we try to chmod relevant folders and files to not be world readable but in case of bug or something something may leak, so take good care of permissions by yourself). 
