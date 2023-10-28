@@ -9,6 +9,9 @@ Goals of this image is to allow:
   - Easier backups as you now can backup your emails like you backup yor other docker containers
   - Taking back control of your own emails
 
+# Disclaimer
+As we are pulling and potentially deleting emails from remote server, loss of emails is very much possible in case of misconfiguration and/or bugs. If you value your mails please at least configure fetchmail not to delete messages from remote server (use keep keyword) and preferrably also configure remote server to keep copies of messages and still understand that you are at risk. Under no circumstances nobody else than you can be held reponsible of data loss (if you do not accpet then please do not use this image). You've been warned.
+
 # Software
 Following software packages are used for this image:
 * Dovecot for IMAP and LDA
@@ -43,9 +46,9 @@ services:
 
 For ```RSPAMD_PASSWORD_ENC``` seems like encrypted password can be only generated using rspamadm and annoyingly in docker-compose.yml you must replace $ with $$, so start container first without a password and run:
 ```
-docker exec container rspamadm pw -p password | sed  's/\$/$$/g'
+$ docker exec container rspamadm pw -p password | sed  's/\$/$$/g'
+$$2$$rxgdn8ez91f49cmq7kgj75rhmeps4awy$$mp35rment7zt4mizqxia7zg6ayxmbronhi1mrzhybudobczx3ery
 ```
-
 
 ## Ports
 * ```143``` - IMAP, while STARTTLS is supported so is unencrypted connections so exposing this port is strongly advised against 
@@ -92,6 +95,9 @@ Create fetchmail configuration file fetchmailrc i.e. ```/config/users/user@examp
 * Use ```/usr/libexec/dovecot/deliver``` as mda as it updates Dovecot's index during delivery
 * For spam detection use ```rspamc --mime | /usr/libexec/dovecot/deliver``` as mda 
 * For spam detection and rule based filtering use ```rspamc --mime | /usr/bin/fdm -a stdin -f ~/fdm.conf -l -m -v fetch``` as mda and setup fdm to use ```/usr/libexec/dovecot/deliver``` 
+
+#### Examples
+
 
 ### fdm.com
 
