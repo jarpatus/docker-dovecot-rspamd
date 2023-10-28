@@ -143,6 +143,17 @@ match "^Delivered-To: alias@example.com" in headers action { "alias@example.com"
 match all action { "user@example.com" "user@example.com:Received" }
 ```
 
+# Security considerations
+Make sure that container configuration and data cannot be read by outsiders. If you just do ```mkdir container``` and use bind mounts, your container config and data actually could be world readable. In worst case your emails are world readable (on container start we try to chmod relevant folders and files to not be world readable but in case of bug or something something may leak, so take good care of permissions by yourself). 
+
+Use encrypted passwords instead of plain text ones when configuring container. Even if permissions are set up properly, it's a good thing never to store plain text passwords.
+
+Mails, config, etc. is not encrypted in container so make sure that if you back them up, you will encrypt them. 
+
+As usual, all users in docker group can control your container and thus read your mail. 
+
+Consider what ports you expose and especially consider what you expose to the Internet. If you want to access your mail from the Internet i.e. using mobile devices or so, consider using VPN instead of opening ports to your internal network.
+
 # Backups 
 Backup your volumes or bind mounts as usual. To backup Redis database run following command before backup to make Redis to write database to disk.
 ```
