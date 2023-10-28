@@ -53,12 +53,32 @@ You should use volumes or bind mounts for all following folders:
 * /var/lib/rspamd - Rspamd static runtime data
 
 # Configuration
-All configuration should be put under /config (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server. You could create multiple such users or you could create multiple users having mailboxes but only one user would retrieve mails and use rules to distribute messages to correct mailboxes. 
+All configuration (except what can be configured by using environment variables) should be put under /config (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server. You could create multiple such users or you could create multiple users having mailboxes but only one user would retrieve mails and use rules to distribute messages to correct mailboxes. 
 
 Container will read /config only on start and set up users, configs etc. so in case you want to modify config, restart the container.
 
 ## Users
-Virtual users can be created by creating a folder under /config/users e.g. /config/users/user@example.com. In order to create mailbox for the user, create a file passwd under user's. In order to enable email retrieval for the user create a file fetchmailrc user's folder i.e. /config/users/user@example.com/fetchmailrc. In order to u
+Virtual users can be created by creating a folder under /config/users e.g. /config/users/user@example.com. In order to create mailbox for the user, create a file passwd under user's folder. In order to enable email retrieval for the user create a file fetchmailrc and for fdm create a file fdm.conf. 
+
+### passwd
+Create passwd file i.e. /config/users/user@example.com/passwd if you want to use mailbox for the user. This will create a new virtual user to Dovecot's password database with password read from the file. Password should be in format Dovecot understand, plain text but preferrably encrypted.
+
+To use plain text password use {PLAIN} prefix:
+```
+{PLAIN}password
+```
+
+To use encrypted password no prefix is needed, use openssl to generate password:
+
+```
+$ openssl passwd -6
+Password:
+Verifying - Password:
+$6$pu01GtapWT3f.i0N$Vf9Bu.JC8YpJB4hk/nN84v1/8mf4/vdR3vjBUX4TntllRP.2KHjHtvmQcbP8QlbWwylAT/KGFWZ62YKcfHp.w.
+```
+
+### fetchmailrc
+### fdm.com
 
 
 
