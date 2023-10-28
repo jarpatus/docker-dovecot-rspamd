@@ -143,6 +143,13 @@ match "^Delivered-To: alias@example.com" in headers action { "alias@example.com"
 match all action { "user@example.com" "user@example.com:Received" }
 ```
 
+# Backups 
+Backup your volumes or bind mounts as usual. To backup Redis database run following command before backup to make Redis to write database to disk.
+```
+docker exec container redis-cli save
+```
+
+Consider your data as backed up only after you have tried to restore everything from backups...
 
 # FAQ
 * Why fetchmail instead of just fdm doing fetch? Fdm does not support daemon mode nor IDLE.
