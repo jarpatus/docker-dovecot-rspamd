@@ -1,0 +1,18 @@
+services:
+  dovecot:
+    image: codedure/dovecot
+    build:
+      context: app
+    container_name: dovecot
+    environment:
+      RSPAMD_PASSWORD: 'password'
+    volumes:
+      - ./config:/config
+      - ./data/dovecot:/home/vmail
+      - ./data/redis:/var/lib/redis
+      - ./data/rspamd:/var/lib/rspamd
+    ports:
+      - 143:143
+      - 993:993
+      - 11334:11334
+    restart: unless-stopped

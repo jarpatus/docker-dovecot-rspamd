@@ -1,0 +1,20 @@
+# Use STDIN 
+account "stdin" disabled stdin
+
+# Deliver action to INBOX for alias@example.com
+action "alias@example.com" pipe "/usr/libexec/dovecot/deliver -d alias@example.com"
+
+# Deliver action to Received for alias@example.com
+action "alias@example.com:Received" pipe "/usr/libexec/dovecot/deliver -d alias@example.com -m Received"
+
+# Deliver action to INBOX for user@example.com
+action "user@example.com" pipe "/usr/libexec/dovecot/deliver -d user@example.com"
+
+# Deliver action to Received for user@example.com
+action "user@example.com:Received" pipe "/usr/libexec/dovecot/deliver -d user@example.com -m Received"
+
+# Match mails with header "Delivered-To: alias@example.com", deliver to alias@example.com
+match "^Delivered-To: alias@example.com" in headers action { "alias@example.com" "alias@example.com:Received" }
+
+# Match everything else, deliver to user@example.com
+match all action { "user@example.com" "user@example.com:Received" }

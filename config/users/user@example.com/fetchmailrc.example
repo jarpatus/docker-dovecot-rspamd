@@ -1,0 +1,3 @@
+poll mail.example.com protocol IMAP port 993
+      user 'user@example.com' there with ssl with password 'password' folder 'INBOX' idle ssl keep
+      mda "/usr/libexec/dovecot/deliver -d user@example.com"

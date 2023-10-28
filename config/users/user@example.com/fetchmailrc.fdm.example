@@ -1,0 +1,3 @@
+poll imappro.zoho.eu protocol IMAP port 993
+      user 'user@example.com' there with ssl with password 'password' folder 'INBOX' idle ssl keep
+      mda "rspamc --mime | /usr/bin/fdm -a stdin -f ~/fdm.conf -l -m -v fetch"
