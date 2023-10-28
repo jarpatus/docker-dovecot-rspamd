@@ -24,7 +24,6 @@ services:
     image: codedure/dovecot
     container_name: dovecot
     environment:
-      RSPAMD_PASSWORD: password
       RSPAMD_PASSWORD_ENC: $$2$$rxgdn8ez91f49cmq7kgj75rhmeps4awy$$mp35rment7zt4mizqxia7zg6ayxmbronhi1mrzhybudobczx3ery
     volumes:
       - ./config:/config
@@ -49,27 +48,27 @@ docker exec container rspamadm pw -p password | sed  's/\$/$$/g'
 
 
 ## Ports
-* 143 - IMAP, while STARTTLS is supported so is unencrypted connections so exposing this port is strongly advised against 
-* 993 - IMAPS, encrypted, please use this
-* 11334 - Rspamd controller and Web UI, at minimum set RSPAMD_PASSWORD or RSPAMD_PASSWORD_ENC environment variable but consided if this needs to be exposed at all
+* ```143``` - IMAP, while STARTTLS is supported so is unencrypted connections so exposing this port is strongly advised against 
+* ```993``` - IMAPS, encrypted, please use this
+* ```11334``` - Rspamd controller and Web UI, at minimum set RSPAMD_PASSWORD or RSPAMD_PASSWORD_ENC environment variable but consided if this needs to be exposed at all
 
 ## Mounts
 You should use volumes or bind mounts for all following folders:
-* /config - Container is configured and can be customized by putting config to this folder
-* /home/vmail - Contains mailboxes which you probably do want to backup as well 
-* /var/lib/redis - Redis databases 
-* /var/lib/rspamd - Rspamd static runtime data
+* ```/config``` - Container is configured and can be customized by putting config to this folder
+* ```/home/vmail``` - Contains mailboxes which you probably do want to backup as well 
+* ```/var/lib/redis```- Redis databases 
+* ```/var/lib/rspamd``` - Rspamd static runtime data
 
 # Configuration
-All configuration (except what can be configured by using environment variables) should be put under /config (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server. You could create multiple such users or you could create multiple users having mailboxes but only one user would retrieve mails and use rules to distribute messages to correct mailboxes. 
+All configuration (except what can be configured by using environment variables) should be put under ```/config``` (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server. You could create multiple such users or you could create multiple users having mailboxes but only one user would retrieve mails and use rules to distribute messages to correct mailboxes. 
 
-Container will read /config only on start and set up users, configs etc. so in case you want to modify config, restart the container. If no configuration has been added container will start with Dovecot running, but no mailboxes will be created nor mail will be retrieved.
+Container will read ```/config``` only on start and set up users, configs etc. so in case you want to modify config, restart the container. If no configuration has been added container will start with Dovecot running, but no mailboxes will be created nor mail will be retrieved.
 
 ## Users
-Virtual users can be created by creating a folder under /config/users e.g. /config/users/user@example.com. In order to create mailbox for the user, create a file passwd under user's folder. In order to enable email retrieval for the user create a file fetchmailrc and for fdm create a file fdm.conf. 
+Virtual users can be created by creating a folder under ```/config/users``` e.g. ```/config/users/user@example.com```. In order to create mailbox for the user, create a file passwd under user's folder. In order to enable email retrieval for the user create a file fetchmailrc and for fdm create a file fdm.conf. 
 
 ### passwd
-Create passwd file i.e. /config/users/user@example.com/passwd if you want to use mailbox for the user. This will create a new virtual user to Dovecot's password database with password read from the file. Password should be in format Dovecot understand, plain text but preferrably encrypted.
+Create passwd file i.e. ```/config/users/user@example.com/passwd``` if you want to use mailbox for the user. This will create a new virtual user to Dovecot's password database with password read from the file. Password should be in format Dovecot understand, plain text but preferrably encrypted.
 
 To use plain text password use {PLAIN} prefix (but please use encrypted password instead just for good measure):
 ```
@@ -86,6 +85,14 @@ $6$pu01GtapWT3f.i0N$Vf9Bu.JC8YpJB4hk/nN84v1/8mf4/vdR3vjBUX4TntllRP.2KHjHtvmQcbP8
 ```
 
 ### fetchmailrc
+Create fetchmail configuration file fetchmailrc i.e. ```/config/users/user@example.com/fetchmailrc``` if you want to use mail retrieval for the user. This will setup a new instance of daemonized fetchmail for the user based on conifguration file. Configure as you would normally configure fetchmailrc, but:
+
+* Strongly consider using keep setting (does not delete mails from external server, see Disclaimer)
+* Using idle setting is nice and will enable near instant delivery
+* Use ```/usr/libexec/dovecot/deliver``` as mda as it updates Dovecot's index during delivery
+* For spam detection use ```rspamc --mime | /usr/libexec/dovecot/deliver``` as mda 
+* For spam detection and rule based filtering use ```rspamc --mime | /usr/bin/fdm -a stdin -f ~/fdm.conf -l -m -v fetch``` as mda and setup fdm to use ```/usr/libexec/dovecot/deliver``` 
+
 ### fdm.com
 
 
@@ -94,5 +101,5 @@ $6$pu01GtapWT3f.i0N$Vf9Bu.JC8YpJB4hk/nN84v1/8mf4/vdR3vjBUX4TntllRP.2KHjHtvmQcbP8
 
 # FAQ
 * Why fetchmail instead of just fdm doing fetch? Fdm does not support daemon mode nor IDLE.
-* Why use Dovecot's delivery when fdm could do delivery by itself? Updates Dovecot's mailbox indexes during delivery. 
+* Why use Dovecot's delivery when fdm could do delivery by itself? Updates Dovecot's mailbox indexes during delivery leading to better performance. 
 
