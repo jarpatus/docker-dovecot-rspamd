@@ -24,7 +24,8 @@ services:
     image: codedure/dovecot
     container_name: dovecot
     environment:
-      RSPAMD_PASSWORD: 'password'
+      RSPAMD_PASSWORD: password
+      RSPAMD_PASSWORD_ENC: $$2$$rxgdn8ez91f49cmq7kgj75rhmeps4awy$$mp35rment7zt4mizqxia7zg6ayxmbronhi1mrzhybudobczx3ery
     volumes:
       - ./config:/config
       - ./data/dovecot:/home/vmail
@@ -38,7 +39,14 @@ services:
 ```
 
 ## Environment variables
-* RSPAMD_PASSWORD - Password for rpsamd controller
+* RSPAMD_PASSWORD - Plain text password for Rspamd controller (use encrypted instead for good measure).
+* RSPAMD_PASSWORD_ENC - Ecnrypted password for Rspamd controller. Note that if both RSPAMD_PASSWORD and RSPAMD_PASSWORD_ENC are defined, RSPAMD_PASSWORD will be used.
+
+For RSPAMD_PASSWORD_ENC seems like encrypted password can be only generated using rspamadm and annoyingly in docker-compose.yml you must replace $ with $$, so start container first without a password and run:
+```
+docker exec container rspamadm pw -p password | sed  's/\$/$$/g'
+```
+
 
 ## Ports
 * 143 - IMAP, while STARTTLS is supported so is unencrypted connections so exposing this port is strongly advised against 
@@ -55,7 +63,7 @@ You should use volumes or bind mounts for all following folders:
 # Configuration
 All configuration (except what can be configured by using environment variables) should be put under /config (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server. You could create multiple such users or you could create multiple users having mailboxes but only one user would retrieve mails and use rules to distribute messages to correct mailboxes. 
 
-Container will read /config only on start and set up users, configs etc. so in case you want to modify config, restart the container.
+Container will read /config only on start and set up users, configs etc. so in case you want to modify config, restart the container. If no configuration has been added container will start with Dovecot running, but no mailboxes will be created nor mail will be retrieved.
 
 ## Users
 Virtual users can be created by creating a folder under /config/users e.g. /config/users/user@example.com. In order to create mailbox for the user, create a file passwd under user's folder. In order to enable email retrieval for the user create a file fetchmailrc and for fdm create a file fdm.conf. 
@@ -63,7 +71,7 @@ Virtual users can be created by creating a folder under /config/users e.g. /conf
 ### passwd
 Create passwd file i.e. /config/users/user@example.com/passwd if you want to use mailbox for the user. This will create a new virtual user to Dovecot's password database with password read from the file. Password should be in format Dovecot understand, plain text but preferrably encrypted.
 
-To use plain text password use {PLAIN} prefix:
+To use plain text password use {PLAIN} prefix (but please use encrypted password instead just for good measure):
 ```
 {PLAIN}password
 ```
