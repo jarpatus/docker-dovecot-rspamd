@@ -51,7 +51,7 @@ docker exec container rspamadm pw -p password | sed  's/\$/$$/g'
 ## Ports
 * 143 - IMAP, while STARTTLS is supported so is unencrypted connections so exposing this port is strongly advised against 
 * 993 - IMAPS, encrypted, please use this
-* 11334 - Rspamd controller and Web UI, at minimum set RSPAMD_PASSWORD environment variable
+* 11334 - Rspamd controller and Web UI, at minimum set RSPAMD_PASSWORD or RSPAMD_PASSWORD_ENC environment variable but consided if this needs to be exposed at all
 
 ## Mounts
 You should use volumes or bind mounts for all following folders:
