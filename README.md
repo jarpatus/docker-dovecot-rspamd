@@ -27,7 +27,7 @@ services:
     image: codedure/dovecot
     container_name: dovecot
     environment:
-      RSPAMD_PASSWORD_ENC: $$2$$rxgdn8ez91f49cmq7kgj75rhmeps4awy$$mp35rment7zt4mizqxia7zg6ayxmbronhi1mrzhybudobczx3ery
+      RSPAMD_PASSWORD_ENC: $$2$$rhpb4naqycoshygfpe6b48wwejiakk3w$$zhf6bbeo4djibusp9zx7aahym8sim8dx41byyizc3kspr48wdb9y 
     volumes:
       - ./config:/config
       - ./data/dovecot:/home/vmail
@@ -47,7 +47,7 @@ services:
 For ```RSPAMD_PASSWORD_ENC``` seems like encrypted password can be only generated using rspamadm and annoyingly in docker-compose.yml you must replace $ with $$, so start container first without a password and run:
 ```
 $ docker exec container rspamadm pw -p password | sed  's/\$/$$/g'
-$$2$$rxgdn8ez91f49cmq7kgj75rhmeps4awy$$mp35rment7zt4mizqxia7zg6ayxmbronhi1mrzhybudobczx3ery
+$$2$$rhpb4naqycoshygfpe6b48wwejiakk3w$$zhf6bbeo4djibusp9zx7aahym8sim8dx41byyizc3kspr48wdb9y
 ```
 
 ## Ports
