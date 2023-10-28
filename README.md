@@ -122,10 +122,26 @@ poll mail.example.com protocol IMAP port 993
 ```
 
 
-### fdm.com
+### fdm.conf
+If you use fdm as mda in fetchmailrc, you need to set up fdm.conf. Configure as you would configure fdm, but:
 
+* Create only stdin account, do not make fdm to actually fetch emails from anywhere.  
+* Create pipe action(s) for mail delivery and use ```/usr/libexec/dovecot/deliver -d mailbox``` as command
 
+You can create as complex configurations as you wish, deliver mails to multiple mailboxes and folders based on headers or whatever, make copies (archive) of messages, handle aliases, forwards, distribution lists etc. How cool is that? 
 
+#### Examples
+Deliver mails to two different mailboxes based on rules and make copies of messages. By default deliver messages to mailbox user@example.com but in case of ```Delivered-To: alias@example.com``` found from headers deliver to mailbox alias@example.com instead. Creates copies of messages to Received folder of choosen mailbox. 
+
+```
+account "stdin" disabled stdin
+action "alias@example.com" pipe "/usr/libexec/dovecot/deliver -d alias@example.com"
+action "alias@example.com:Received" pipe "/usr/libexec/dovecot/deliver -d alias@example.com -m Received"
+action "user@example.com" pipe "/usr/libexec/dovecot/deliver -d user@example.com"
+action "user@example.com:Received" pipe "/usr/libexec/dovecot/deliver -d user@example.com -m Received"
+match "^Delivered-To: alias@example.com" in headers action { "alias@example.com" "alias@example.com:Received" }
+match all action { "user@example.com" "user@example.com:Received" }
+```
 
 
 # FAQ
