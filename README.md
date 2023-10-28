@@ -131,7 +131,7 @@ If you use fdm as mda in fetchmailrc, you need to set up fdm.conf. Configure as 
 You can create as complex configurations as you wish, deliver mails to multiple mailboxes and folders based on headers or whatever, make copies (archive) of messages, handle aliases, forwards, distribution lists etc. How cool is that? 
 
 #### Examples
-Deliver mails to two different mailboxes based on rules and make copies of messages. By default deliver messages to mailbox user@example.com but in case of ```Delivered-To: alias@example.com``` found from headers deliver to mailbox alias@example.com instead. Creates copies of messages to Received folder of choosen mailbox. 
+Deliver mails to two different mailboxes based on rules and make copies of messages. By default deliver messages to mailbox ```user@example.com``` but in case of ```Delivered-To: alias@example.com``` found from headers deliver to mailbox ```alias@example.com``` instead. Creates copies of messages to Received folder of choosen mailbox. 
 
 ```
 account "stdin" disabled stdin
@@ -147,4 +147,5 @@ match all action { "user@example.com" "user@example.com:Received" }
 # FAQ
 * Why fetchmail instead of just fdm doing fetch? Fdm does not support daemon mode nor IDLE.
 * Why use Dovecot's delivery when fdm could do delivery by itself? Updates Dovecot's mailbox indexes during delivery leading to better performance. 
+* Why manual creation of conf files, why no environment variables? Realistically speaking supporting complex use cases using environment variables whould be total nightmare both for users and me...
 
