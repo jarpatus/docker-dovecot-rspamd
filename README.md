@@ -44,3 +44,15 @@ services:
 * 143 - IMAP, while STARTTLS is supported so is unencrypted connections so exposing this port is strongly advised against 
 * 993 - IMAPS, encrypted, please use this
 * 11334 - Rspamd controller and Web UI, at minimum set RSPAMD_PASSWORD environment variable
+
+## Mounts
+You should use volumes or bind mounts for all following folders:
+* /config - Container is configured and can be customized by putting config to this folder
+* /home/vmail - Contains mailboxes which you probably do want to backup as well 
+* /var/lib/redis - Redis databases 
+* /var/lib/rspamd - Rspamd static runtime data 
+
+# FAQ
+* Why fetchmail instead of just fdm doing fetch? Fdm does not support daemon mode nor IDLE.
+* Why use Dovecot's delivery when fdm could do delivery by itself? Updates Dovecot's mailbox indexes during delivery. 
+
