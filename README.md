@@ -9,4 +9,11 @@ Goals of this image is to allow:
   - Easier backups as you now can backup your emails like you backup yor other docker containers
   - Taking back control of your own emails
 
-  -  
+# Software
+Following software packages are used for this image:
+* Dovecot for IMAP and LDA
+* fetchmail for remote-mail retrieval
+* Rspamd for spam filtering  
+* fdm for rule based filtering 
+
+# Installation
