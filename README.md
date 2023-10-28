@@ -17,3 +17,30 @@ Following software packages are used for this image:
 * fdm for rule based filtering 
 
 # Installation
+Use Docker Compose, example docker-compose.yml:
+```
+services:
+  dovecot:
+    image: codedure/dovecot
+    container_name: dovecot
+    environment:
+      RSPAMD_PASSWORD: 'password'
+    volumes:
+      - ./config:/config
+      - ./data/dovecot:/home/vmail
+      - ./data/redis:/var/lib/redis
+      - ./data/rspamd:/var/lib/rspamd
+    ports:
+      # - 143:143
+      - 993:993
+      # - 11334:11334
+    restart: unless-stopped
+```
+
+## Environment variables
+* RSPAMD_PASSWORD - Password for rpsamd controller
+
+## Ports
+* 143 - IMAP, while STARTTLS is supported so is unencrypted connections so exposing this port is strongly advised against 
+* 993 - IMAPS, encrypted, please use this
+* 11334 - Rspamd controller and Web UI, at minimum set RSPAMD_PASSWORD environment variable
