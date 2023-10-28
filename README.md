@@ -50,7 +50,19 @@ You should use volumes or bind mounts for all following folders:
 * /config - Container is configured and can be customized by putting config to this folder
 * /home/vmail - Contains mailboxes which you probably do want to backup as well 
 * /var/lib/redis - Redis databases 
-* /var/lib/rspamd - Rspamd static runtime data 
+* /var/lib/rspamd - Rspamd static runtime data
+
+# Configuration
+All configuration should be put under /config (see Mounts above). We do use concept of virtual "users" for which mailboxes can be created and/or mail retrieval can be set up. In trivial case you would create one virtual user with mailbox and enable mail retrieval from external server. You could create multiple such users or you could create multiple users having mailboxes but only one user would retrieve mails and use rules to distribute messages to correct mailboxes. 
+
+Container will read /config only on start and set up users, configs etc. so in case you want to modify config, restart the container.
+
+## Users
+Virtual users can be created by creating a folder under /config/users e.g. /config/users/user@example.com. In order to create mailbox for the user, create a file passwd under user's. In order to enable email retrieval for the user create a file fetchmailrc user's folder i.e. /config/users/user@example.com/fetchmailrc. In order to u
+
+
+
+
 
 # FAQ
 * Why fetchmail instead of just fdm doing fetch? Fdm does not support daemon mode nor IDLE.
