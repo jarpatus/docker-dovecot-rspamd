@@ -97,7 +97,7 @@ Create fetchmail configuration file fetchmailrc i.e. ```/config/users/user@examp
 * For spam detection and rule based filtering use ```rspamc --mime | /usr/bin/fdm -a stdin -f ~/fdm.conf -l -m -v fetch``` as mda and setup fdm to use ```/usr/libexec/dovecot/deliver``` 
 
 #### Examples
-Pull from IMAP server and deliver directly to mailbox. Keep messages and use IDLE.
+Pull from IMAP server and deliver directly to mailbox user@example.com. Keep messages and use IDLE. Notice that it is possible to make delivery to another user's mailbox but that would be a bit misconfiguration unless you use this user only for mail retrieval and have another user for mailbox.  
 
 ```
 poll mail.example.com protocol IMAP port 993
@@ -105,7 +105,7 @@ poll mail.example.com protocol IMAP port 993
       mda "/usr/libexec/dovecot/deliver -d user@example.com"
 ```
 
-Pull from IMAP server, run spam detection and deliver directly to mailbox. Keep messages and use IDLE. Notice that this will add new spam related headers to the message, but does not actually filter anything unless you do some client side filtering.
+Pull from IMAP server, run spam detection and deliver directly to mailbox user@example.com. Keep messages and use IDLE. Notice that this will add new spam related headers to the message, but does not actually filter anything unless you do some client side filtering. Also notice that it is possible to make delivery to another user's mailbox but that would be a bit misconfiguration unless you use this user only for mail retrieval and have another user for mailbox.
 
 ```
 poll mail.example.com protocol IMAP port 993
