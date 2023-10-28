@@ -38,10 +38,10 @@ services:
 ```
 
 ## Environment variables
-* RSPAMD_PASSWORD - Plain text password for Rspamd controller (use encrypted instead for good measure).
-* RSPAMD_PASSWORD_ENC - Ecnrypted password for Rspamd controller.
+* ```RSPAMD_PASSWORD``` - Plain text password for Rspamd controller (use encrypted instead for good measure).
+* ```RSPAMD_PASSWORD_ENC``` - Ecnrypted password for Rspamd controller.
 
-For RSPAMD_PASSWORD_ENC seems like encrypted password can be only generated using rspamadm and annoyingly in docker-compose.yml you must replace $ with $$, so start container first without a password and run:
+For ```RSPAMD_PASSWORD_ENC``` seems like encrypted password can be only generated using rspamadm and annoyingly in docker-compose.yml you must replace $ with $$, so start container first without a password and run:
 ```
 docker exec container rspamadm pw -p password | sed  's/\$/$$/g'
 ```
