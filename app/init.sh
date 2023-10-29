@@ -90,6 +90,8 @@ chown redis:redis /var/lib/redis
 # Setup rspamd
 if [ ! -z $RSPAMD_PASSWORD ]; then
   RSPAMD_PASSWORD_ENC=`rspamadm pw -p $RSPAMD_PASSWORD`
+fi
+if [ ! -z $RSPAMD_PASSWORD_ENC ]; then
   echo "password = \"$RSPAMD_PASSWORD_ENC\"" >> /etc/rspamd/local.d/worker-controller.inc
 fi
 mkdir -p /run/rspamd
@@ -100,5 +102,5 @@ addgroup rspamd redis
 # Setup users
 for d in /config/users/*/; do addUser $d; done
 
-# Run supervisor
-supervisord -c /etc/supervisor/supervisord.conf
+# Exec supervisor
+exec supervisord -c /etc/supervisor/supervisord.conf

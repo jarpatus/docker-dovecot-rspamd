@@ -5,7 +5,7 @@ services:
       context: app
     container_name: dovecot
     environment:
-      RSPAMD_PASSWORD: 'password'
+      RSPAMD_PASSWORD_ENC: $$2$$rhpb4naqycoshygfpe6b48wwejiakk3w$$zhf6bbeo4djibusp9zx7aahym8sim8dx41byyizc3kspr48wdb9y
     volumes:
       - ./config:/config
       - ./data/dovecot:/home/vmail

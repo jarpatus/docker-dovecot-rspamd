@@ -1,3 +1,3 @@
 poll mail.example.com protocol IMAP port 993
       user 'user@example.com' there with ssl with password 'password' folder 'INBOX' idle ssl keep
-      mda "rspamc --mime | /usr/bin/fdm -a stdin -f ~/fdm.conf -l -m -v fetch"
+      mda "rspamc --mime | /usr/libexec/dovecot/deliver -d user@example.com"
