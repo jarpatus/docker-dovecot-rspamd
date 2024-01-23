@@ -40,6 +40,15 @@ services:
     restart: unless-stopped
 ```
 
+# Build
+To build image from sources instead of using dockerhub, clone repository to src/, copy example docker-compose.yaml to cwd and build:
+
+```
+git clone https://github.com/jarpatus/docker-dovecot-rspamd.git src
+cp src/examples/docker-compose.yaml .
+docker-compose build
+```
+
 ## Environment variables
 * ```RSPAMD_PASSWORD``` - Plain text password for Rspamd controller (use encrypted instead for good measure).
 * ```RSPAMD_PASSWORD_ENC``` - Ecnrypted password for Rspamd controller.
