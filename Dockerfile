@@ -1,7 +1,7 @@
  # Start from Apline linux
 FROM alpine:3.18
 
-# Expose ports for: imap, imaps, rspam controller
+# Expose ports for imap, imaps and rspamd
 EXPOSE 143
 EXPOSE 993
 EXPOSE 11334
@@ -12,10 +12,7 @@ RUN apk add --no-cache fdm --repository=http://dl-cdn.alpinelinux.org/alpine/edg
 RUN apk add --no-cache nmap inetutils-telnet nano
 
 # Copy application files to /app
-COPY . /app
-
-# Create /config folder 
-RUN mkdir /config 
+COPY ./app /app
 
 # Run init script
 CMD ["sh", "/app/init.sh"]
