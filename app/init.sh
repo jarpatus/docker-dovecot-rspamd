@@ -18,11 +18,12 @@ addUser()
 {
   CONFDIR=$1
   USER=`basename $1`
+  SAFEUSER=`echo -n $USER | tr -c '[:alnum:]' '_'`
 
   if [ -f $CONFDIR/fetchmailrc ]
   then
     echo Configure supervisor for $USER
-    echo "[program:fetchmail_$USER]" > /etc/supervisor/conf.d/$USER.conf
+    echo "[program:fetchmail_$SAFEUSER]" > /etc/supervisor/conf.d/$USER.conf
     echo "command=/usr/bin/fetchmail --daemon 600 --nodetach --syslog" >> /etc/supervisor/conf.d/$USER.conf
     echo "user=$FETCHMAILUSER" >> /etc/supervisor/conf.d/$USER.conf
     echo "environment=FETCHMAILHOME=\"/run/fetchmail/$USER\",HOME=\"/run/fetchmail/$USER\",USER=\"$MAILUSER\"" >> /etc/supervisor/conf.d/$USER.conf
