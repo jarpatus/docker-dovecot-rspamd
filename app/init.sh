@@ -74,6 +74,11 @@ cp -dRv /app/etc /
 # Apply custom config
 if [ -d /config/etc ]; then cp -dRv /config/etc /; fi
 
+# Clear stale pid files
+if ! pidof dovecot; then
+  rm -f /var/run/dovecot/master.pid
+fi
+
 # Setup dovecot
 if ! grep -q "$MAILUSER"; then
   adduser -D -s /sbin/nologin "$MAILUSER"
