@@ -23,15 +23,15 @@ addUser()
   if [ -f $CONFDIR/fetchmailrc ]
   then
     echo Configure supervisor for $USER
-    echo "[program:fetchmail_$SAFEUSER]" > /etc/supervisor/conf.d/$USER.conf
-    echo "command=/usr/bin/fetchmail --daemon 600 --nodetach --syslog" >> /etc/supervisor/conf.d/$USER.conf
-    echo "user=$FETCHMAILUSER" >> /etc/supervisor/conf.d/$USER.conf
-    echo "environment=FETCHMAILHOME=\"/run/fetchmail/$USER\",HOME=\"/run/fetchmail/$USER\",USER=\"$MAILUSER\"" >> /etc/supervisor/conf.d/$USER.conf
-    echo "stdout_logfile=/dev/stdout" >> /etc/supervisor/conf.d/$USER.conf
-    echo "stderr_logfile=/dev/stderr" >> /etc/supervisor/conf.d/$USER.conf
-    echo "stdout_logfile_maxbytes=0" >> /etc/supervisor/conf.d/$USER.conf
-    echo "stderr_logfile_maxbytes=0" >> /etc/supervisor/conf.d/$USER.conf
-    ls -l /etc/supervisor/conf.d/$USER.conf
+    echo "[program:fetchmail_$SAFEUSER]" > /etc/supervisor.d/$USER.conf
+    echo "command=/usr/bin/fetchmail --daemon 600 --nodetach --syslog" >> /etc/supervisor.d/$USER.conf
+    echo "user=$FETCHMAILUSER" >> /etc/supervisor.d/$USER.conf
+    echo "environment=FETCHMAILHOME=\"/run/fetchmail/$USER\",HOME=\"/run/fetchmail/$USER\",USER=\"$MAILUSER\"" >> /etc/supervisor.d/$USER.conf
+    echo "stdout_logfile=/dev/stdout" >> /etc/supervisor.d/$USER.conf
+    echo "stderr_logfile=/dev/stderr" >> /etc/supervisor.d/$USER.conf
+    echo "stdout_logfile_maxbytes=0" >> /etc/supervisor.d/$USER.conf
+    echo "stderr_logfile_maxbytes=0" >> /etc/supervisor.d/$USER.conf
+    ls -l /etc/supervisor.d/$USER.conf
   fi
 
   if [ -f $CONFDIR/passwd ]
@@ -109,4 +109,4 @@ addgroup rspamd redis
 for d in /config/users/*/; do addUser $d; done
 
 # Exec supervisor
-exec supervisord -c /etc/supervisor/supervisord.conf
+exec supervisord
